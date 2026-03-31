@@ -7,6 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Array of 10 available images used for the slot machine reels (assets/t1.jpeg to t10.jpeg)
     const images = Array.from({length: 10}, (_, i) => `assets/t${i + 1}.jpeg`);
     
+    // Funny Win Messages Array
+    const FUNNY_WIN_MESSAGES = [
+        "CONGRATS, YOU PEAKED IN LIFE! 😂",
+        "ABSOLUTE GIRLBOSS ENERGY! 💅✨",
+        "THE MACHINE IS BROKEN, RUN! 🏃‍♀️💨",
+        "YOU'VE BEEN TUNTIFIED!",
+        "TUNTII DEMANDS A SACRIFICE!",
+        "UNLIMITED POWER!!! ⚡️"
+    ];
+    
     // --- Web Audio API Synth Engine ---
     // Sets up a base audio context for synthesizing 8-bit sounds natively
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -47,6 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Synthesized MLG Airhorn sound using layered dissonant sawtooth waves
+    function playAirhorn() {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const bursts = [0, 0.25, 0.45];
+        bursts.forEach(delay => {
+            setTimeout(() => {
+                const freqs = [300, 310, 320];
+                freqs.forEach(f => playTone(f, 'sawtooth', 0.25, 0.15));
+            }, delay * 1000);
+        });
+    }
     // ----------------------------------
     
     const reelInners = [
@@ -66,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isSpinning = false;
     let confettiParticles = [];
     let confettiAnimationId;
+    const EMOJIS = ['🌸', '😂', '💸', '🤪', '💃', '💅', '🔥', '🍆'];
 
     // Initializes the confetti particles and canvas dimensions for the celebration screen
     function initConfetti() {
@@ -73,16 +96,16 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         confettiParticles = [];
-        for (let i = 0; i < 150; i++) {
+        // Only rendering 15 emojis to heavily reduce lag on phones!
+        // We reuse these exactly same 15 objects over and over in a loop.
+        for (let i = 0; i < 15; i++) {
             confettiParticles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height - canvas.height,
-                w: Math.random() * 10 + 5,
-                h: Math.random() * 10 + 5,
+                w: Math.random() * 30 + 30, // Much larger size for emojis
                 dx: Math.random() * 4 - 2,
-                dy: Math.random() * 5 + 2,
-                color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-                tilt: Math.floor(Math.random() * 10) - 10,
+                dy: Math.random() * 5 + 4,
+                emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
                 tiltAngle: 0,
                 tiltAngleInc: (Math.random() * 0.07) + 0.05
             });
@@ -94,20 +117,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateConfetti() {
         if (!ctx) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
         confettiParticles.forEach((p) => {
             p.tiltAngle += p.tiltAngleInc;
             p.y += p.dy;
             p.x += Math.sin(p.tiltAngle) * 2 + p.dx;
 
-            ctx.beginPath();
-            ctx.lineWidth = p.w;
-            ctx.strokeStyle = p.color;
-            ctx.moveTo(p.x + p.tilt + p.w / 2, p.y);
-            ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.w / 2);
-            ctx.stroke();
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.tiltAngle);
+            ctx.font = `${p.w}px Arial`;
+            ctx.fillText(p.emoji, 0, 0);
+            ctx.restore();
 
-            if (p.y > canvas.height) {
-                p.y = -10;
+            if (p.y > canvas.height + 50) {
+                p.y = -50;
                 p.x = Math.random() * canvas.width;
             }
         });
@@ -117,9 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             modal.classList.add('celebration-hidden');
-            if (confettiAnimationId) {
-                cancelAnimationFrame(confettiAnimationId);
-            }
+            if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
             if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
         });
     }
@@ -225,11 +250,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Check if they won!
                     if (finalImages[0] === finalImages[1] && finalImages[1] === finalImages[2]) {
+                        
+                        // Pick random hilarious win message for the subtitle below the image
+                        document.querySelector('.funny-subtitle').innerText = FUNNY_WIN_MESSAGES[Math.floor(Math.random() * FUNNY_WIN_MESSAGES.length)];
+                        
+                        // Enforce main text
+                        document.querySelector('.tuntified-text').innerText = "YOU'VE BEEN TUNTIFIED!";
+                        
+                        // Violently shake the slot machine
+                        const wrapper = document.querySelector('.slot-machine-wrapper');
+                        wrapper.classList.add('shake-violent');
+                        
                         setTimeout(() => {
-                            playWinFanfare(); // Fire custom 8-bit party music!
+                            wrapper.classList.remove('shake-violent');
+                            
+                            // Unleash chaos!
+                            playAirhorn();
+                            playWinFanfare(); 
                             initConfetti();
                             modal.classList.remove('celebration-hidden');
-                        }, 500); // Slight delay for dramatic effect
+                        }, 500); // Wait for shake to end
                     }
                 }
             }, duration);
