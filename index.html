@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAUGHTY TUNTII</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="casino-container">
+        <h1 class="marquee-text">NAUGHTY TUNTII</h1>
+        
+        <div class="slot-machine-wrapper">
+            <div class="slot-machine" id="slotMachine">
+                <div class="reel" id="reel1">
+                    <div class="reel-inner" id="reel-inner-1"></div>
+                </div>
+                <div class="reel" id="reel2">
+                    <div class="reel-inner" id="reel-inner-2"></div>
+                </div>
+                <div class="reel" id="reel3">
+                    <div class="reel-inner" id="reel-inner-3"></div>
+                </div>
+                <!-- Highlight line indicating winning row -->
+                <div class="payline"></div>
+            </div>
+            
+            <div class="lever-container">
+                <div class="lever" id="lever">
+                    <div class="lever-knob"></div>
+                    <div class="lever-stick"></div>
+                    <div class="lever-base"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-message" id="status-message">PULL THE LEVER!</div>
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div id="celebration-modal" class="celebration-hidden">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="celebration-content">
+            <h2 class="tuntified-text">YOU'VE BEEN TUNTIFIED!</h2>
+            <img src="assets/t11.jpeg" alt="Tuntified!" class="tuntified-image" />
+            <br>
+            <button id="close-celebration" class="play-again-btn">KEEP SPINNING</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
