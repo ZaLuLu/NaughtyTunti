@@ -1,4 +1,10 @@
+/**
+ * NAUGHTY TUNTII - Main Stylesheet
+ * Contains all CSS variables, responsive layouts, neon text effects, 
+ * and animations for the slot machine interface.
+ */
 :root {
+    /* Core Theme Palette */
     --earth-dark: #1A241C;
     --earth-green: #2E4A35;
     --vegas-gold: #FFD700;
@@ -61,6 +67,7 @@ body {
     gap: 30px;
 }
 
+/* Main Slot Machine Body (Wood texture and gold borders) */
 .slot-machine {
     background: linear-gradient(135deg, var(--dark-wood) 0%, #1a120c 100%);
     border: 10px solid var(--vegas-gold);
@@ -98,6 +105,7 @@ body {
     border-radius: 2px;
 }
 
+/* Individual Reel Container styling with inner shadow for depth */
 .reel {
     width: 200px;
     height: 300px;
@@ -148,6 +156,7 @@ body {
     align-items: center;
 }
 
+/* Interactive Lever Mechanics & Animations */
 .lever {
     width: 60px;
     height: 220px;
@@ -236,7 +245,9 @@ body {
     }
 }
 
-/* Celebration Modal */
+/* =========================================
+   Celebration Modal & Confetti Styles
+   ========================================= */
 #celebration-modal {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;

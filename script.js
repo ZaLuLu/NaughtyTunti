@@ -1,10 +1,17 @@
+/**
+ * NAUGHTY TUNTII - Game Logic
+ * Handles HTML canvas confetti, Web Audio API sounds, reel animations,
+ * and the randomized slot machine mechanics.
+ */
 document.addEventListener('DOMContentLoaded', () => {
-    // We have 10 images t1 to t10
+    // Array of 10 available images used for the slot machine reels (assets/t1.jpeg to t10.jpeg)
     const images = Array.from({length: 10}, (_, i) => `assets/t${i + 1}.jpeg`);
     
     // --- Web Audio API Synth Engine ---
+    // Sets up a base audio context for synthesizing 8-bit sounds natively
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
+    // Core function to play a synthesized oscillator tone for a specific duration
     function playTone(freq, type, duration, vol=0.1) {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator();
@@ -60,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let confettiParticles = [];
     let confettiAnimationId;
 
+    // Initializes the confetti particles and canvas dimensions for the celebration screen
     function initConfetti() {
         if (!canvas) return;
         canvas.width = window.innerWidth;
@@ -119,9 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const ITEMS_PER_REEL = 40; // Total items to scroll through for a long spin
     const REEL_HEIGHT = 300;
     
+    // Populates the DOM with reel items and sets their initial off-screen positions
     function initReels() {
         reelInners.forEach((reelInner) => {
-            reelInner.innerHTML = '';
+            reelInner.innerHTML = ''; // Clear existing items
             
             // Populate reel with 40 random items
             for (let i = 0; i < ITEMS_PER_REEL; i++) {
@@ -152,8 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Setup
     initReels();
     
+    // Main spin logic: triggers audio, handles lever animation, and calculates reel stops
     function spin() {
-        if (isSpinning) return;
+        if (isSpinning) return; // Prevent multiple spins at once
         isSpinning = true;
         
         // Start the mechanical ticking sound
@@ -181,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let completed = 0;
         let finalImages = [];
         
-        // 25% chance to force a win so it's not too rare!
+        // Win Logic Setup: 25% chance to force a guaranteed win for a better user experience
         const forceWin = Math.random() < 0.25;
         const winImageSrc = images[Math.floor(Math.random() * images.length)];
 

@@ -1,3 +1,8 @@
+<!--
+  NAUGHTY TUNTII - Slot Machine Web Application
+  Main HTML Document: Defines the structure of the game including the 
+  reels, lever, and the celebration overlay.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +16,7 @@
     <div class="casino-container">
         <h1 class="marquee-text">NAUGHTY TUNTII</h1>
         
+        <!-- Main Slot Machine Container (Reels + Lever) -->
         <div class="slot-machine-wrapper">
             <div class="slot-machine" id="slotMachine">
                 <div class="reel" id="reel1">
@@ -26,6 +32,7 @@
                 <div class="payline"></div>
             </div>
             
+            <!-- Interactive Pull Lever -->
             <div class="lever-container">
                 <div class="lever" id="lever">
                     <div class="lever-knob"></div>
@@ -38,7 +45,7 @@
         <div class="status-message" id="status-message">PULL THE LEVER!</div>
     </div>
 
-    <!-- Celebration Overlay -->
+    <!-- Celebration Overlay: Hidden by default, shown upon winning -->
     <div id="celebration-modal" class="celebration-hidden">
         <canvas id="confetti-canvas"></canvas>
         <div class="celebration-content">
